@@ -41,7 +41,6 @@ This project simulates an **algorithmic trading workflow** — including market 
 ### Portfolio Service
 - Owns capital, holdings, and P&L
 - Executes BUY / SELL trades
-- Exposes REST APIs for dashboard use
 - Uses an **in-memory repository**
 
 ### Discovery Server (Eureka)
@@ -58,7 +57,7 @@ This project simulates an **algorithmic trading workflow** — including market 
 - Each allocation follows **one BUY → SELL cycle**
 - Strategy emits trade intent
 - Portfolio validates and executes trades
-- Simulation stops after trade cycle completes
+- Simulation stops after the trade cycle completes
 
 ---
 
