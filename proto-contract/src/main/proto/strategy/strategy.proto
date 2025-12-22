@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package strategy;
+
+option java_multiple_files = true;
+option java_package = "com.swarang.strategy.grpc";
+option java_outer_classname = "StrategyProto";
+import "google/protobuf/empty.proto";
+
+message PriceUpdateRequest{
+  string ticker = 1;
+  string price = 2;
+  string timestamp = 3;
+}
+
+enum StrategyDecisionType{
+  HOLD = 0;
+  BUY = 1;
+  SELL = 2;
+}
+
+message StrategySignal{
+  string ticker = 1;
+  StrategyDecisionType decision = 2;
+}
+
+service StrategyService{
+  rpc Evaluate(PriceUpdateRequest) returns (StrategySignal);
+}

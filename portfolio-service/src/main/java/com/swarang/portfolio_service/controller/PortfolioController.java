@@ -1,0 +1,23 @@
+package com.swarang.portfolio_service.controller;
+
+import com.swarang.portfolio_service.application.PortfolioApplicationService;
+import com.swarang.portfolio_service.dto.PortfolioResponseSummary;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping("/portfolio")
+@RequiredArgsConstructor
+public class PortfolioController {
+
+    private PortfolioApplicationService portfolioApplicationService;
+
+    @GetMapping("/summary")
+    public Mono<PortfolioResponseSummary> getSummary(){
+        String userId = "dummyUser@123";
+        return Mono.fromSupplier(() -> portfolioApplicationService.getPortfolioSummary(userId));
+    }
+}

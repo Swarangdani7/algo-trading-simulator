@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package common;
+
+option java_multiple_files = true;
+option java_package = "com.swarang.common.grpc";
+option java_outer_classname = "TradeDecisionProto";
+
+enum TradeDecisionType{
+  HOLD = 0;
+  BUY = 1;
+  SELL = 2;
+}
+
+message TradeDecision{
+  string userId = 1;
+  string ticker = 2;
+  TradeDecisionType decision = 3;
+  string price = 4;
+  string timestamp = 5;
+}

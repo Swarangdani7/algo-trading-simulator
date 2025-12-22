@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Project identity -->
+    <groupId>com.swarang</groupId>
+    <artifactId>algo-trading-simulator</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <!-- Modules -->
+    <modules>
+        <module>proto-contract</module>
+        <module>discovery-server</module>
+        <module>api-gateway</module>
+        <module>market-service</module>
+        <module>strategy-service</module>
+        <module>portfolio-service</module>
+        <module>simulation-service</module>
+    </modules>
+
+</project>
