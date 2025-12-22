@@ -19,7 +19,6 @@ public class Portfolio {
     private final String userId;
     private final CashBalance initialCapital;
     private CashBalance currentBalance;
-    private CashBalance investedAmount;
 
     private final Map<String, TickerAllocation> allocations = new HashMap<>();
     private final Map<String, Holding> holdings = new HashMap<>();
@@ -31,7 +30,6 @@ public class Portfolio {
     public Portfolio(String userId, BigDecimal initialCapital) {
         this.initialCapital = new CashBalance(initialCapital);
         this.currentBalance = new CashBalance(initialCapital);
-        this.investedAmount = new CashBalance(BigDecimal.ZERO);
         this.userId = userId;
     }
 
@@ -41,13 +39,12 @@ public class Portfolio {
             throw new IllegalArgumentException("Insufficient cash for allocation");
         }
         currentBalance = currentBalance.subtract(tickerAllocation.allocationAmount());
-        investedAmount.add(tickerAllocation.allocationAmount());
 
         log.info("Allocated {} for ticker: {}, [Current Balance = {}]", tickerAllocation.allocationAmount(), tickerAllocation.ticker(), currentBalance);
-        allocations.put(tickerAllocation.ticker(), new TickerAllocation(tickerAllocation.ticker(), currentBalance.amount()));
+        allocations.put(tickerAllocation.ticker(), new TickerAllocation(tickerAllocation.ticker(), tickerAllocation.allocationAmount()));
     }
 
-    public void executeTradeDecision(String ticker, StrategyDecision decision, BigDecimal currentPrice, LocalDateTime now) {
+    public boolean executeTradeDecision(String ticker, StrategyDecision decision, BigDecimal currentPrice, LocalDateTime now) {
         PositionState positionState = holdings.containsKey(ticker)
                 ? PositionState.LONG
                 : PositionState.FLAT;
@@ -56,7 +53,7 @@ public class Portfolio {
             if (decision == StrategyDecision.BUY) {
                 buy(ticker, currentPrice, now);
             }
-            return;
+            return false;
         }
         // Position is Long (Bought/Holding)
         Holding holding = holdings.get(ticker);
@@ -65,7 +62,9 @@ public class Portfolio {
                 || isMaxHoldExceeded(holding, now)) {
 
             sell(ticker, currentPrice, now);
+            return true;
         }
+        return false;
     }
 
     private void buy(String ticker, BigDecimal currentPrice, LocalDateTime now) {
@@ -127,14 +126,15 @@ public class Portfolio {
         return retVal;
     }
 
-    public BigDecimal getTotalPnL(Map<String, BigDecimal> currentTickerPrices) {
-        BigDecimal holdingsValue = holdings.values()
-                .stream()
-                .map(h -> currentTickerPrices.get(h.ticker()).multiply(BigDecimal.valueOf(h.quantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    public BigDecimal getTotalPnL() {
+        return currentBalance.amount().subtract(initialCapital.amount());
+    }
 
-        return currentBalance.amount()
-                .add(holdingsValue)
-                .subtract(initialCapital.amount());
+    public BigDecimal getInvestedAmount() {
+        return allocations.values()
+                .stream()
+                .map(TickerAllocation::allocationAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 }

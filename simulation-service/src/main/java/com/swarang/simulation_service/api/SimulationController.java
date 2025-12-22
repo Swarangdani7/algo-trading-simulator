@@ -2,6 +2,7 @@ package com.swarang.simulation_service.api;
 
 import com.swarang.simulation_service.application.SimulationService;
 import com.swarang.simulation_service.domain.SimulationRun;
+import com.swarang.simulation_service.dto.SimulationStopResponse;
 import com.swarang.simulation_service.dto.StartRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
@@ -21,7 +22,8 @@ public class SimulationController {
     }
 
     @PostMapping("/stop/{runId}")
-    public void simulationStop(@PathVariable String runId) {
-        simulationService.stopSimulation(runId);
+    public SimulationStopResponse simulationStop(@PathVariable String runId) {
+        SimulationStopResponse response = simulationService.stopSimulation(runId);
+        return response;
     }
 }

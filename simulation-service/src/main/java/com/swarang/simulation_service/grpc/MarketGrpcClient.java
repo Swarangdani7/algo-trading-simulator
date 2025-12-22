@@ -66,7 +66,6 @@ public class MarketGrpcClient {
 
             @Override
             public void onCompleted() {
-                log.info("Client unsubscribed with subId: {}", runId);
             }
         });
     }

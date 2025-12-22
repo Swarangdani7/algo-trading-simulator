@@ -3,6 +3,7 @@ package com.swarang.simulation_service.application;
 import com.swarang.common.grpc.TradeDecisionType;
 import com.swarang.simulation_service.domain.SimulationRun;
 import com.swarang.simulation_service.dto.AllocationRequest;
+import com.swarang.simulation_service.dto.SimulationStopResponse;
 import com.swarang.simulation_service.grpc.MarketGrpcClient;
 import com.swarang.simulation_service.grpc.PortfolioGrpcClient;
 import com.swarang.simulation_service.grpc.StrategyGrpcClient;
@@ -55,12 +56,18 @@ public class SimulationService {
         return run;
     }
 
-    public void stopSimulation(String runId) {
+    public SimulationStopResponse stopSimulation(String runId) {
         runStore.findById(runId).ifPresent(SimulationRun::stop);
         marketGrpcClient.unsubscribe(runId);
+        log.info("Client unsubscribed with subId: {}", runId);
+        return SimulationStopResponse.builder()
+                .message("Simulation has been stopped")
+                .runId(runId)
+                .build();
     }
 
     public void onMarketPrice(String ticker, BigDecimal price, LocalDateTime timestamp) {
+        portfolioGrpcClient.checkForTradeFinish();
         runStore.findAll()
                 .stream()
                 .filter(SimulationRun::isActive)

@@ -18,7 +18,12 @@ message Allocation{
   string amount = 2;
 }
 
+message TradeFinishResponse{
+  bool finish = 1;
+}
+
 service PortfolioService{
   rpc ExecuteTrade(common.TradeDecision) returns (google.protobuf.Empty);
   rpc InitializePortfolio(PortfolioInitRequest) returns (google.protobuf.Empty);
+  rpc TradeFinish(google.protobuf.Empty) returns (stream TradeFinishResponse);
 }

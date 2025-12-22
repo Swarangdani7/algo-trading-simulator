@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class PortfolioController {
 
-    private PortfolioApplicationService portfolioApplicationService;
+    private final PortfolioApplicationService portfolioApplicationService;
 
     @GetMapping("/summary")
     public Mono<PortfolioResponseSummary> getSummary(){

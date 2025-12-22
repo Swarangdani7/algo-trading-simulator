@@ -4,6 +4,7 @@ import com.google.protobuf.Empty;
 import com.swarang.common.grpc.TradeDecision;
 import com.swarang.portfolio.grpc.PortfolioInitRequest;
 import com.swarang.portfolio.grpc.PortfolioServiceGrpc;
+import com.swarang.portfolio.grpc.TradeFinishResponse;
 import com.swarang.portfolio_service.application.PortfolioApplicationService;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,15 @@ import net.devh.boot.grpc.server.service.GrpcService;
 public class PortfolioGrpcService extends PortfolioServiceGrpc.PortfolioServiceImplBase {
 
     private final PortfolioApplicationService portfolioApplicationService;
+
+    @Override
+    public void tradeFinish(Empty request, StreamObserver<TradeFinishResponse> responseObserver) {
+        TradeFinishResponse response = portfolioApplicationService.getTradeFinishResponse();
+        responseObserver.onNext(response);
+        if(response.getFinish()){
+            responseObserver.onCompleted();
+        }
+    }
 
     @Override
     public void executeTrade(TradeDecision request, StreamObserver<Empty> responseObserver) {

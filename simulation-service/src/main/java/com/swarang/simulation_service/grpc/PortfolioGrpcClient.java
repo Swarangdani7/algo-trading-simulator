@@ -6,6 +6,8 @@ import com.swarang.common.grpc.TradeDecisionType;
 import com.swarang.portfolio.grpc.Allocation;
 import com.swarang.portfolio.grpc.PortfolioInitRequest;
 import com.swarang.portfolio.grpc.PortfolioServiceGrpc;
+import com.swarang.portfolio.grpc.TradeFinishResponse;
+import com.swarang.simulation_service.application.SimulationService;
 import io.grpc.stub.StreamObserver;
 import lombok.extern.slf4j.Slf4j;
 import net.devh.boot.grpc.client.inject.GrpcClient;
@@ -69,6 +71,25 @@ public class PortfolioGrpcClient {
             public void onCompleted() {
                 log.info("Trade decision received for {}", ticker);
             }
+        });
+    }
+
+    public void checkForTradeFinish(){
+        asyncStub.tradeFinish(Empty.getDefaultInstance(), new StreamObserver<TradeFinishResponse>() {
+            @Override
+            public void onNext(TradeFinishResponse tradeFinishResponse) {
+                if(tradeFinishResponse.getFinish()){
+                    log.info("Trade execution completed, please stop simulation");
+                }
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                log.error("An error occurred when sending trade finish signal", throwable);
+            }
+
+            @Override
+            public void onCompleted() { }
         });
     }
 
