@@ -1,6 +1,6 @@
 ####### Stage-1 : Build the application #########
 #Setting the Java Runtime
-FROM maven:3.9.9-eclipse-temurin-17-alpine AS builder
+FROM maven:3.9.9-eclipse-temurin-17 AS builder
 #Setting working directory inside the container
 WORKDIR /build
 #Copying dependencies to the container working directory
