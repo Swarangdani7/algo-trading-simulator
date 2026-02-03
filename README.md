@@ -83,4 +83,5 @@ Reactive APIs | Spring WebFlux |
 Inter-service Communication | gRPC |
 Service Discovery | Netflix Eureka |
 Build Tool | Maven |
+CI/CD | Docker, AWS CodeBuild, AWS ECR, AWS CodePipeline, AWS ECS Fargate
 
