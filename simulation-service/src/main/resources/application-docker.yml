@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: simulation-service
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+server:
+  port: 8084
+  shutdown: graceful
+
+grpc:
+  client:
+    market-service:
+      address: discovery:///market-service
+      negotiationType: PLAINTEXT
+      keepAliveTime: 30s
+      keepAliveTimeout: 10s
+      keepAliveWithoutCalls: true
+      enableRetry: true
+      maxRetryAttempts: 3
+    strategy-service:
+      address: discovery:///strategy-service
+      negotiationType: PLAINTEXT
+      keepAliveTime: 30s
+      keepAliveTimeout: 10s
+      keepAliveWithoutCalls: true
+    portfolio-service:
+      address: discovery:///portfolio-service
+      negotiationType: PLAINTEXT
+      keepAliveTime: 30s
+      keepAliveTimeout: 10s
+      keepAliveWithoutCalls: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka
+

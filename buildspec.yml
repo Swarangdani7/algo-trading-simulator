@@ -1,0 +1,71 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: ap-south-1
+    ACCOUNT_ID: 334228653812
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - aws --version
+      - export COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo "Commit hash [$COMMIT_HASH]"
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+  build:
+    commands:
+      - echo "Build started on ${date}"
+
+      #### API GATEWAY ####
+      - docker build -t api-gateway:$COMMIT_HASH -f api-gateway/Dockerfile .
+      - docker tag api-gateway:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/api-gateway:$COMMIT_HASH
+      - docker tag api-gateway:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/api-gateway:latest
+
+      #### MARKET SERVICE ####
+      - docker build -t market-service:$COMMIT_HASH -f market-service/Dockerfile .
+      - docker tag market-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/market-service:$COMMIT_HASH
+      - docker tag market-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/market-service:latest
+
+      #### PORTFOLIO SERVICE ####
+      - docker build -t portfolio-service:$COMMIT_HASH -f portfolio-service/Dockerfile .
+      - docker tag portfolio-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/portfolio-service:$COMMIT_HASH
+      - docker tag portfolio-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/portfolio-service:latest
+
+      #### STRATEGY SERVICE ####
+      - docker build -t strategy-service:$COMMIT_HASH -f strategy-service/Dockerfile .
+      - docker tag strategy-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/strategy-service:$COMMIT_HASH
+      - docker tag strategy-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/strategy-service:latest
+
+      #### SIMULATION SERVICE ####
+      - docker build -t simulation-service:$COMMIT_HASH -f simulation-service/Dockerfile .
+      - docker tag simulation-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/simulation-service:$COMMIT_HASH
+      - docker tag simulation-service:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/simulation-service:latest
+
+      #### DISCOVERY SERVER ####
+      - docker build -t discovery-server:$COMMIT_HASH -f discovery-server/Dockerfile .
+      - docker tag discovery-server:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/discovery-server:$COMMIT_HASH
+      - docker tag discovery-server:$COMMIT_HASH $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/discovery-server:latest
+
+  post_build:
+    commands:
+      - echo "Pushing Images"
+
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/api-gateway:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/api-gateway:latest
+
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/market-service:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/market-service:latest
+
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/portfolio-service:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/portfolio-service:latest
+
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/strategy-service:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/strategy-service:latest
+
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/simulation-service:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/simulation-service:latest
+
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/discovery-server:$COMMIT_HASH
+      - docker push $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/discovery-server:latest

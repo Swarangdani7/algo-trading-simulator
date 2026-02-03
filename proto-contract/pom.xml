@@ -66,5 +66,6 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>proto-contract</finalName>
     </build>
 </project>

@@ -96,6 +96,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+        <finalName>portfolio-service</finalName>
 	</build>
 
 </project>

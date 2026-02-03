@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: portfolio-service
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+server:
+  port: 8083
+  shutdown: graceful
+
+grpc:
+  server:
+    port: 9092
+    enableKeepAlive: true
+    keepAliveTime: 30s
+    keepAliveTimeout: 10s
+    permitKeepAliveWithoutCalls: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka
+    webclient:
+      enabled: true
+

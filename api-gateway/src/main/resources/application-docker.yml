@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: simulation-service
+              uri: lb://simulation-service
+              predicates:
+                - Path=/simulation/**
+
+            - id: market-service
+              uri: lb://market-service
+              predicates:
+                - Path=/market/**
+
+            - id: portfolio-service
+              uri: lb://portfolio-service
+              predicates:
+                - Path=/portfolio/**
+
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+server:
+  port: 8080
+  shutdown: graceful
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka

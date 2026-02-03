@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: strategy-service
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+
+server:
+  port: 8082
+  shutdown: graceful
+
+grpc:
+  server:
+    port: 9091
+    enableKeepAlive: true
+    keepAliveTime: 30s
+    keepAliveTimeout: 10s
+    permitKeepAliveWithoutCalls: true
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka
+    webclient:
+      enabled: true
+
+strategy:
+  rolling-window-size: 5
+  warm-up-units: 5
+  threshold: 0.01
+

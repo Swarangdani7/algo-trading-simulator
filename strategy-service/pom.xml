@@ -96,6 +96,7 @@
                 </configuration>
             </plugin>
         </plugins>
+        <finalName>strategy-service</finalName>
     </build>
 
 </project>
