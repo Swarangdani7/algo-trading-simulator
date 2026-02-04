@@ -28,3 +28,9 @@ eureka:
 market:
   price-interval-ms: 12000
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
